@@ -1,0 +1,78 @@
+<!-- Welcome -->
+<h1><a href="http://www.nameyourfavoritecolor.com"><span><img class="logo" src="/images/cf634af3.nyfc_logo.png"></span>Name Your Favorite Color</a></h1>
+
+<div class="row welcome">
+	<p>Hi! Welcome to Name Your Favorite Color. This site aims to plumb your creativity through a simple act, Naming Your Favorite Color!</p>
+
+	<p>Use the color picker below to choose your favorite color. Then give it a name!</p>
+
+	<p ng-hide="user.first_name">Be sure to <a ng-click="fbLogin()">share your creativity</a> on Facebook and sign up to revisit your creations on nameyourfavoritecolor.com.</p>
+</div>
+
+<!-- Choose a Color and Name It -->
+<div class="row create" ng-controller="nyfcCreateController">
+	
+	<!-- verbage about creating a color -->
+	<p ng-show="user.first_name">Welcome, <a href="{{user.link}}" target="blank">{{user.name}}!</a><br><span class="diminish">Not {{user.name}}? Please <a ng-click="fbLogout()">logout</a>.</span></p>
+	<p>PICK a color, NAME a color, CREATE a color! <span ng-hide="user.first_name"><a ng-click="fbLogin()">Sign into your FB account</a> to OWN a color.</span></p>
+
+	<div class="col-sm-4 col-md-4 col-lg-4">
+		<label for="colorPicker">Pick a Color:</label><br>
+		<nyfc-spectrum name="colorPicker"></nyfc-spectrum>
+	</div>
+
+	<!-- Add the name and submit-->
+	<div class="col-sm-4 col-md-4 col-lg-4">
+		<label for="colorNamer">Name Your Color:</label><br>
+		<input type="text" ng-model="name" ng-change="changeName()" placeholder="Name Your Color!" name="colorNamer"><br>
+		<a ng-click="submit()" class="button-link">CREATE!</a>
+		<p ng-show="encouragement">Make another!</p>
+	</div>
+		
+	<div class="col-sm-4 col-md-4 col-lg-4">
+		<label for="preview">Preview:</label><br>
+		<div class="preview" style="{{stylesStr}}" name="preview">
+			<span class="previewText">{{name}}</span>
+		</div>
+	</div>
+</div>
+
+<!-- When an id is passed to the URL, the nyfc is shown  -->
+<div ng-show="detailobj" class="row detail" ng-controller="nyfcDetailController">
+	<p>Name: {{detailobj.name}}, RGB Value: {{detailobj.color}}, <span ng-show="detailobj.user">By <a href="{{detailobj.user.link}}" target="blank">{{detailobj.user.name}}</a></span></p>
+	<nyfc-canvas color-obj="detailobj" class="detail-nyfc">
+	<div ng-click="handleShare(detailobj.id, detailobj.name);" style="border-color:{{detailobj.color}}" class="fb-share">
+		<span class="fb-icon"></span>
+		<span>Share</span>
+	</div>
+</nyfc-canvas></div>
+
+<div ng-controller="nyfcPaginatedController" class="row colors">
+	
+	<!-- navigation -->
+	<div class="page-nav">
+		<a class="button-link nav-button" ng-click="previousPage()" ng-disabled="{{disabled}}">Previous</a>
+		<a class="button-link nav-button" ng-click="nextPage()" ng-disabled="{{disabled}}">Next</a>
+		<label for="onlyMyColors" class="mycolors" ng-show="user.first_name">Only My Colors</label>
+		<input type="checkbox" class="mycolors" name="onlyMyColors" ng-show="user.first_name" ng-change="myColors()" ng-model="onlyMyColors">
+		<hr>
+	</div>
+	
+	<!-- colors -->
+	<div ng-repeat="color in colors" class="nyfc" style="float:left">
+		<nyfc-canvas color-obj="color">
+		<span><a href="#{{color.id}}">{{ color.shortName }}</a></span>
+		<div ng-click="handleShare(color.id, color.name);" style="border-color:{{color.color}}" class="fb-share">
+			<span class="fb-icon"></span>
+			<span>Share</span>
+		</div>
+	</nyfc-canvas></div>
+	
+	<!-- navigation -->
+	<div class="page-nav">
+		<hr>
+		<a class="button-link nav-button" ng-click="previousPage()" ng-disabled="{{disabled}}">Previous</a>
+		<a class="button-link nav-button" ng-click="nextPage()" ng-disabled="{{disabled}}">Next</a>
+	</div>
+	
+</div>

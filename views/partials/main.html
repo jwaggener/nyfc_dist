@@ -62,7 +62,7 @@
 	<div ng-repeat="color in colors" class="nyfc" style="float:left">
 		<nyfc-canvas color-obj="color">
 		<span><a href="#{{color.id}}">{{ color.shortName }}</a></span>
-		<div ng-click="handleShare(color.id, color.name);" style="border-color:{{color.color}}" class="fb-share">
+		<div ng-click="handleShare(color.id, color.name, color.h, color.s, color.l);" style="border-color:{{color.color}}" class="fb-share">
 			<span class="fb-icon"></span>
 			<span>Share</span>
 		</div>

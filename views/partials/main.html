@@ -15,19 +15,32 @@
 	<!-- verbage about creating a color -->
 	<p ng-show="user.first_name">Welcome, <a href="{{user.link}}" target="blank">{{user.name}}!</a><br><span class="diminish">Not {{user.name}}? Please <a ng-click="fbLogout()">logout</a>.</span></p>
 	<p>PICK a color, NAME a color, CREATE a color! <span ng-hide="user.first_name"><a ng-click="fbLogin()">Sign into your FB account</a> to OWN a color.</span></p>
-
-	<div class="col-sm-4 col-md-4 col-lg-4">
-		<label for="colorPicker">Pick a Color:</label><br>
-		<nyfc-spectrum name="colorPicker"></nyfc-spectrum>
-	</div>
-
-	<!-- Add the name and submit-->
-	<div class="col-sm-4 col-md-4 col-lg-4">
-		<label for="colorNamer">Name Your Color:</label><br>
-		<input type="text" ng-model="name" ng-change="changeName()" placeholder="Name Your Color!" name="colorNamer"><br>
-		<a ng-click="submit()" class="button-link">CREATE!</a>
-		<p ng-show="encouragement">Make another!</p>
-	</div>
+	
+	<form name="nyfcFormController" novalidate="">
+		<div class="col-sm-4 col-md-4 col-lg-4">
+			<label for="colorPicker">Pick a Color:</label><br>
+			<nyfc-spectrum name="colorPicker"></nyfc-spectrum>
+		</div>
+		
+		<!-- hidden color inputs 
+		<input ng-value="{{h}}" type="hidden" name='h'>
+		<input ng-value="{{s}}" type="hidden" name='s'>
+		<input ng-value="{{l}}" type="hidden" name='l'>	
+		<input ng-value="{{rgbString}}" type="hidden" name='rgbString'>
+		-- >
+		
+		<!-- Add the name and submit-->
+		<div class="col-sm-4 col-md-4 col-lg-4">
+			<label for="colorNamer">Name Your Color:</label><br>
+			<input type="text" ng-model="name" ng-change="changeName()" placeholder="Name Your Color!" name="name" required=""><br>
+			<a ng-click="submit()" class="button-link" ng-class="{disabled:!validate()}">CREATE!</a>
+			<p>
+				<span ng-show="showError(nyfcFormController.color, 'required')">Please choose a color!</span>
+				<span ng-show="showError(nyfcFormController.name, 'required')">Please enter a color name!</span>
+				<span ng-show="encouragement">Make another!</span>
+			</p>
+		</div>
+	</form>
 		
 	<div class="col-sm-4 col-md-4 col-lg-4">
 		<label for="preview">Preview:</label><br>
@@ -47,12 +60,12 @@
 	</div>
 </nyfc-canvas></div>
 
-<div ng-controller="nyfcPaginatedController" class="row colors">
+<div ng-controller="nyfcPaginatedController" class="row colors" ng-class="{loader:!colors.length}">
 	
 	<!-- navigation -->
-	<div class="page-nav">
-		<a class="button-link nav-button" ng-click="previousPage()" ng-disabled="{{disabled}}">Previous</a>
-		<a class="button-link nav-button" ng-click="nextPage()" ng-disabled="{{disabled}}">Next</a>
+	<div class="page-nav" ng-show="colors.length">
+		<a class="button-link nav-button" ng-class="{disabled:!currentPage}" ng-click="previousPage()" ng-disabled="!currentPage">{{textPrevious}}</a>
+		<a class="button-link nav-button" ng-click="nextPage()" ng-disabled="{{disabled}}">{{textNext}}</a>
 		<label for="onlyMyColors" class="mycolors" ng-show="user.first_name">Only My Colors</label>
 		<input type="checkbox" class="mycolors" name="onlyMyColors" ng-show="user.first_name" ng-change="myColors()" ng-model="onlyMyColors">
 		<hr>
@@ -69,10 +82,10 @@
 	</nyfc-canvas></div>
 	
 	<!-- navigation -->
-	<div class="page-nav">
+	<div class="page-nav bottom" ng-show="colors.length">
 		<hr>
-		<a class="button-link nav-button" ng-click="previousPage()" ng-disabled="{{disabled}}">Previous</a>
-		<a class="button-link nav-button" ng-click="nextPage()" ng-disabled="{{disabled}}">Next</a>
+		<a class="button-link nav-button" ng-class="{disabled:!currentPage}" ng-click="previousPage()" ng-disabled="!currentPage">{{textPrevious}}</a>
+		<a class="button-link nav-button" ng-click="nextPage()" ng-disabled="{{disabled}}">{{textNext}}</a>
 	</div>
 	
 </div>
